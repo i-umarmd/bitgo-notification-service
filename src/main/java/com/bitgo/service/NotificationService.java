@@ -24,6 +24,31 @@ public class NotificationService {
         return  repository.save(notification);
     }
 
+    public Notification updateNotification(Notification notification) throws Exception {
+        var dbNotificationOpt = repository.findById(notification.getNotificationId());
+        if(dbNotificationOpt.isEmpty()){
+            throw new Exception("Record not found");
+        }
+        var dbNotification = dbNotificationOpt.get();
+        // this can be optimised using mapstruct dependency
+        dbNotification.setCurrentPriceOfBitCoin(notification.getCurrentPriceOfBitCoin());
+        dbNotification.setDailyPercentageChange(notification.getDailyPercentageChange());
+        dbNotification.setTradingVolume(notification.getTradingVolume());
+        dbNotification.setUpdatedBy(Long.valueOf(-90));
+        dbNotification.setUpdatedTimeStamp(LocalDateTime.now());
+        return  repository.save(dbNotification);
+    }
+
+    public void deleteNotification(Long id) throws Exception {
+        var dbNotificationOpt = repository.findById(id);
+        if(dbNotificationOpt.isEmpty()){
+            throw new Exception("Record not found");
+        }
+        repository.delete(dbNotificationOpt.get());
+    }
+
+
+
     public void sendNotification(List<String> emailIds){
         log.info("Sent Notifications for emailIds: {}",emailIds);
     }

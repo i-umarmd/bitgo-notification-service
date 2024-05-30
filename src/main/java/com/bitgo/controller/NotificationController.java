@@ -46,5 +46,24 @@ public class NotificationController {
         }
     }
 
+    @PatchMapping("update")
+    public ResponseEntity<?>  updateNotification(@RequestBody Notification notification) {
+        try {
+            var response = service.updateNotification(notification);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?>  deleteNotification(@PathVariable Long id) {
+        try {
+            service.deleteNotification(id);
+            return ResponseEntity.ok("Successfully deleted notification");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }

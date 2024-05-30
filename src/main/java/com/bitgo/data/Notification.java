@@ -22,4 +22,8 @@ public class Notification extends BaseEntity {
     @Column(name = "trading_volume")
     private Long tradingVolume;
 
+    @Column(name ="status")
+    @Enumerated(EnumType.STRING)
+    private NotificationStatus status;
+
 }

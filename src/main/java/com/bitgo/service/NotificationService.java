@@ -1,6 +1,7 @@
 package com.bitgo.service;
 
 import com.bitgo.data.Notification;
+import com.bitgo.data.NotificationStatus;
 import com.bitgo.respository.NotificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,11 @@ public class NotificationService {
     private NotificationRepository repository;
 
     public Notification createNotification(Notification notification){
-        notification.setCreatedBy(Long.valueOf(-90));
-        notification.setUpdatedBy(Long.valueOf(-90));
+        notification.setCreatedBy((long) -90);
+        notification.setUpdatedBy((long) -90);
         notification.setCreatedTimeStamp(LocalDateTime.now());
         notification.setUpdatedTimeStamp(LocalDateTime.now());
+        notification.setStatus(NotificationStatus.PENDING);
         return  repository.save(notification);
     }
 
@@ -34,7 +36,7 @@ public class NotificationService {
         dbNotification.setCurrentPriceOfBitCoin(notification.getCurrentPriceOfBitCoin());
         dbNotification.setDailyPercentageChange(notification.getDailyPercentageChange());
         dbNotification.setTradingVolume(notification.getTradingVolume());
-        dbNotification.setUpdatedBy(Long.valueOf(-90));
+        dbNotification.setUpdatedBy((long) -90);
         dbNotification.setUpdatedTimeStamp(LocalDateTime.now());
         return  repository.save(dbNotification);
     }
@@ -50,6 +52,8 @@ public class NotificationService {
 
 
     public void sendNotification(List<String> emailIds){
+        var notifications = repository.findByStatus(NotificationStatus.PENDING);
+        notifications.forEach(notification -> notification.setStatus(NotificationStatus.SENT));
         log.info("Sent Notifications for emailIds: {}",emailIds);
     }
 
